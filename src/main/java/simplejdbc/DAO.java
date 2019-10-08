@@ -80,7 +80,19 @@ public class DAO {
 	 * @throws DAOException
 	 */
 	public int numberOfOrdersForCustomer(int customerId) throws DAOException {
-		throw new UnsupportedOperationException("Pas encore implémenté");
+
+		String sql = "SELECT COUNT(*) AS NUMBER from PURCHASE_ORDER WHERE CUSTOMER_ID = ?";
+		try (Connection connection = myDataSource.getConnection();
+			PreparedStatement stmt = connection.prepareStatement(sql)) {
+			stmt.setInt(1, customerId);
+                        ResultSet rs = stmt.executeQuery();
+                        rs.next();
+			return rs.getInt("NUMBER");
+
+		} catch (SQLException ex) {
+			Logger.getLogger("DAO").log(Level.SEVERE, null, ex);
+			throw new DAOException(ex.getMessage());
+		}
 	}
 
 	/**
